@@ -9,6 +9,10 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using EnvDTE;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace DeleteBaseCommand {
     /// <summary>
@@ -82,18 +86,52 @@ namespace DeleteBaseCommand {
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private void MenuItemCallback(object sender, EventArgs e) {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "DeleteBaseCommand";
+        /// 
+ 
 
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.ServiceProvider,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        private void MenuItemCallback(object sender, EventArgs e) {
+            DTE dte = (DTE)ServiceProvider.GetService(typeof(DTE));
+            var slnName = dte.Solution.FullName;
+            var solutionFolderName = Path.GetDirectoryName(slnName);
+            List<string> configFiles = new List<string>();
+            configFiles.AddRange(Directory.GetFiles(solutionFolderName, "app.config", SearchOption.AllDirectories));
+            configFiles.AddRange(Directory.GetFiles(solutionFolderName, "web.config", SearchOption.AllDirectories));
+            var dbNamePattern = @"<add name=""ConnectionString"" connectionString=""Integrated Security=SSPI;Pooling=false;Data Source=\(localdb\)\\mssqllocaldb;Initial Catalog=(?<dbname>.*)""";
+            foreach(var confFile in configFiles) {
+                using(var sw = new StreamReader(confFile)) {
+                    var configText = sw.ReadToEnd();
+                    var dbNameRegex = new Regex(dbNamePattern);
+                    Match dbNameMatch = dbNameRegex.Match(configText);
+                    if(dbNameMatch.Success) {
+                        var dbName = dbNameMatch.Groups["dbname"].Value;
+                        DeleteDb(dbName);
+                        VsShellUtilities.ShowMessageBox(this.ServiceProvider,
+               string.Format("db {0} was deleted", dbName),
+                      "Deleted",
+               OLEMSGICON.OLEMSGICON_INFO,
+               OLEMSGBUTTON.OLEMSGBUTTON_OK,
+               OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                    }
+                    return;
+                }
+            }
+
+            VsShellUtilities.ShowMessageBox(this.ServiceProvider,
+          
+          "No database was found",
+                   "Not found",
+                   OLEMSGICON.OLEMSGICON_INFO,
+                   OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        public void DeleteDb(string dbName) {
+            DeleteBaseCommandPackage options = package as DeleteBaseCommandPackage;
+            var deleteProcessPath = options.DeleteProgramFilePath;
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo.FileName = deleteProcessPath;
+            proc.StartInfo.Arguments = "-" + dbName;
+            proc.Start();
         }
     }
 }

@@ -1,0 +1,57 @@
+﻿ private void MenuItemCallback(object sender, EventArgs e) {
+
+            DTE dte = (DTE)ServiceProvider.GetService(typeof(DTE));
+            List<Project> projects = CollectAllProjects(dte.Solution);
+
+            var slnName = dte.Solution.FullName;
+            var solutionFolderName = Path.GetDirectoryName(slnName);
+            List<string> configFiles = new List<string>();
+            configFiles.AddRange(Directory.GetFiles(solutionFolderName, "app.config"));
+            configFiles.AddRange(Directory.GetFiles(solutionFolderName, "web.config"));
+            foreach(var confFile in configFiles) {
+
+            }
+
+
+            //var proj1 = projects[0];
+            ////var prop2 = proj1.FileNames(1);
+            //var projItems = proj1.ProjectItems;
+
+
+            //for(int i = 1; i <= projItems.Count; i++) {
+            //    var projItem = projItems.Item(i);
+            //    foreach(var pp4 in projItem.Properties) {
+            //        var st = pp4;
+
+            //    }
+
+            //    var fulPath = projItem.Properties.Item("FullPath");
+            //    var locPath = projItem.Properties.Item("LocalPath");
+            //    var prop = projItem.Properties.Item("FileName");
+
+            //    var st1 = ("The file name of item " + i + " is: "    + prop.Value.ToString());
+            //    if(prop.Value.ToString().Contains(".cs") || prop.Value.ToString().Contains(".vb")) {
+            //        foreach(var pp1 in projItem.Properties) {
+            //            var pp1val = pp1.ToString();
+            //        }
+            //        prop = projItem.Properties.Item("FileSize");
+            //        var st2 = ("The file size of item " + i + "    is: " + prop.Value.ToString());
+
+            //        prop = projItem.Properties.Item("DateCreated");
+            //        var st3 = ("The creation date of item " + i + " is: " + prop.Value.ToString());
+            //    }
+            //}
+
+            ////  var projItem = projItems.Item(1);
+            //string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
+            //string title = "DeleteBaseCommand";
+
+            // Show a message box to prove we were here
+            VsShellUtilities.ShowMessageBox(
+                this.ServiceProvider,
+                message,
+                title,
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }

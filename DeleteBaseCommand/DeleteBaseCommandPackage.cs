@@ -15,6 +15,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace DeleteBaseCommand {
     /// <summary>
@@ -54,7 +55,13 @@ namespace DeleteBaseCommand {
             // not sited yet inside Visual Studio environment. The place to do all the other
             // initialization is the Initialize method.
         }
-
+        public string DeleteProgramFilePath {
+            get {
+                OptionPageGrid page = (OptionPageGrid)GetDialogPage(typeof(OptionPageGrid));
+                var st = page.DeleteProgramFilePath;
+                return st;
+            }
+        }
         #region Package Members
 
         /// <summary>
@@ -67,5 +74,17 @@ namespace DeleteBaseCommand {
         }
 
         #endregion
+    }
+    public class OptionPageGrid : DialogPage {
+        private string deleteProgramFilePath = @"c:\Dropbox\Deploy\DelMSSQLDataBase\DelMSSQLDataBase.exe";
+        [Category("DeleteProgramFilePath")]
+        [DisplayName("DeleteProgramFilePath")]
+        [Description("Path to DelMSSQLDataBase.exe")]
+        public string DeleteProgramFilePath {
+            get { return deleteProgramFilePath; }
+            set { deleteProgramFilePath = value; }
+        }
+
+        
     }
 }
