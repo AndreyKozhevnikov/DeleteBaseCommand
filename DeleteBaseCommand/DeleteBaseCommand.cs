@@ -23,7 +23,7 @@ namespace DeleteBaseCommand {
         /// Command ID.
         /// </summary>
         public const int CommandId = 0x0100;
-
+//test333
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
@@ -112,7 +112,6 @@ namespace DeleteBaseCommand {
                OLEMSGBUTTON.OLEMSGBUTTON_OK,
                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
                     }
-                    return;
                 }
             }
 
