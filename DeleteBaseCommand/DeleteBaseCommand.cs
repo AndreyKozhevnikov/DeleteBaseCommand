@@ -111,10 +111,11 @@ namespace DeleteBaseCommand {
                OLEMSGICON.OLEMSGICON_INFO,
                OLEMSGBUTTON.OLEMSGBUTTON_OK,
                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                        return;
                     }
                 }
             }
-
+            
             VsShellUtilities.ShowMessageBox(this.ServiceProvider,
           
           "No database was found",
