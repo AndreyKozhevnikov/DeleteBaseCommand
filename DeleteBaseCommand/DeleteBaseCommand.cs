@@ -105,23 +105,25 @@ namespace DeleteBaseCommand {
                     if(dbNameMatch.Success) {
                         var dbName = dbNameMatch.Groups["dbname"].Value;
                         DeleteDb(dbName);
-               //         VsShellUtilities.ShowMessageBox(this.ServiceProvider,
-               //string.Format("db {0} was deleted", dbName),
-               //       "Deleted",
-               //OLEMSGICON.OLEMSGICON_INFO,
-               //OLEMSGBUTTON.OLEMSGBUTTON_OK,
-               //OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-                    }
-                }
-            }
+                        //         VsShellUtilities.ShowMessageBox(this.ServiceProvider,
+                        //string.Format("db {0} was deleted", dbName),
+                        //       "Deleted",
+                        //OLEMSGICON.OLEMSGICON_INFO,
+                        //OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                        //OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                    } else {
+                        VsShellUtilities.ShowMessageBox(this.ServiceProvider,
 
-            VsShellUtilities.ShowMessageBox(this.ServiceProvider,
-          
           "No database was found",
                    "Not found",
                    OLEMSGICON.OLEMSGICON_INFO,
                    OLEMSGBUTTON.OLEMSGBUTTON_OK,
                    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                    }
+                }
+            }
+
+            
         }
 
         public void DeleteDb(string dbName) {
